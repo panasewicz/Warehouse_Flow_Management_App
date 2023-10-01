@@ -9,6 +9,7 @@ Aplication for product flow management in a warehouse. Python - Midealware, MySQ
 Programs are fully tasted, presentation in links below: <br>
 <strong> Warehouse Control </strong> - https://youtu.be/LajZa_TnCQ0 <br>
 
+
 ## Tools
 
 <div align="left">
