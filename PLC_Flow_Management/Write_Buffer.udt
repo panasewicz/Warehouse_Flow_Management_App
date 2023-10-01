@@ -1,0 +1,10 @@
+﻿TYPE "Write_Buffer"
+VERSION : 0.1
+   STRUCT
+      Order_Station_ID : Int;
+      Barcode : Int;
+      Order : Int;
+   END_STRUCT;
+
+END_TYPE
+

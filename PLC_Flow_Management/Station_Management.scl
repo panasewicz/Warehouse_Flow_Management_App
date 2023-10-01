@@ -1,0 +1,61 @@
+﻿FUNCTION_BLOCK "Station_Management"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      Read_Value_From_SQL : Bool;
+      Find_Value : Bool;
+      Station_ID : Int;
+   END_VAR
+
+   VAR_OUTPUT 
+      Station_Order : Int;
+   END_VAR
+
+   VAR 
+      Reading_Value {InstructionName := 'F_TRIG'; LibVersion := '1.0'; S7_SetPoint := 'False'} : F_TRIG;
+      Finding_Value {InstructionName := 'R_TRIG'; LibVersion := '1.0'} : R_TRIG;
+      One_Shot_Delay {InstructionName := 'TOF_TIME'; LibVersion := '1.0'} : TOF_TIME;
+      One_Shot_Delay_1 {InstructionName := 'TOF_TIME'; LibVersion := '1.0'} : TOF_TIME;
+      SQL_Communication_Trigger { S7_SetPoint := 'True'} : Bool;
+      Find_Value_Trigger : Bool;
+      i { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      Buffer_Values { S7_SetPoint := 'False'} : "Write_Buffer";
+   END_VAR
+
+
+BEGIN
+	
+	#Reading_Value(CLK := #Read_Value_From_SQL);
+	
+	#One_Shot_Delay(IN := #Reading_Value.Q,
+	                PT := t#15ms,
+	                Q => #SQL_Communication_Trigger);
+	
+	#Finding_Value(CLK := #Find_Value);
+	
+	#One_Shot_Delay_1(IN := #Finding_Value.Q,
+	                PT := t#5ms,
+	                Q => #Find_Value_Trigger);
+	
+	IF #SQL_Communication_Trigger = True THEN
+	    "Scanners_db_Write".Scanner_Write[#Station_ID].Send_Data := True;
+	    #Buffer_Values.Barcode := "Scanners_db_Read".Scanner_Read[#Station_ID].Barcode_Number;
+	    #Buffer_Values.Order_Station_ID := "Scanners_db_Read".Scanner_Read[#Station_ID].Scanner_ID;
+	ELSE
+	    "Scanners_db_Write".Scanner_Write[#Station_ID].Send_Data := False;
+	END_IF;
+	
+	
+	
+	IF #Find_Value_Trigger = True THEN
+	    #Station_Order := 0;
+	    FOR #i := 0 TO 10 DO
+	        IF "Station_Buffer".Write_Buffer[#i].Order_Station_ID = #Buffer_Values.Order_Station_ID AND "Station_Buffer".Write_Buffer[#i].Barcode = #Buffer_Values.Barcode THEN
+	            #Station_Order := "Station_Buffer".Write_Buffer[#i].Order;
+	            EXIT;
+	        END_IF;
+	    END_FOR;
+	END_IF;
+	   
+END_FUNCTION_BLOCK
+
