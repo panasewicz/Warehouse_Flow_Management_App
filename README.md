@@ -12,13 +12,10 @@ Programs are fully tasted, presentation in links below: <br>
 
 ## Tools
 
-<div align="left">
-
-  <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtEzGCtEjn9aRZMei35yM7VPdgPLI1GCerKA&usqp=CAU alt="python" width="40" height="40"/> </a>
-</div>
-<br>
 <strong> TiaPortal </strong> <br>
-<strong> S7-PLCSIM Advanced </strong>
+<strong> S7-PLCSIM Advanced </strong> <br>
+<strong> Python </strong> <br>
+<strong> MySQL </strong>
 
 ## The application makes the connection as follows: 
 ![Wiring_Diagram](images/wiring_diagram.png)
